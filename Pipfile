@@ -1,0 +1,25 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+lxml = "*"
+requests = "*"
+pyyaml = "*"
+
+
+[dev-packages]
+
+pycodestyle = "*"
+"flake8" = "*"
+"flake8-docstrings" = "*"
+pytest = "*"
+ipykernel = "*"
+
+[requires]
+
+python_version = "3.5"

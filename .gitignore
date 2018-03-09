@@ -1,0 +1,13 @@
+target
+*.iml
+*.pyc
+*.deb
+debian/changelog
+debian/files
+debian/*.debhelper.log
+debian/*.substvars
+debian/*/*
+.env
+__pycache__
+.pytest_cache
+build
