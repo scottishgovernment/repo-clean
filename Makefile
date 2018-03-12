@@ -81,6 +81,9 @@ test: ## run tests quickly with the default Python
 # release: clean ## package and upload a release
 # 	twine upload dist/*
 
+run:
+	pipenv run src/bin/clean_repo.py
+
 dryrun:
 	pipenv run src/bin/clean_repo.py --dryrun
 
