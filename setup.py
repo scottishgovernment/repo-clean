@@ -16,7 +16,7 @@ setup(
     description="Utilities for managing the Scot Gov deployment pipeline",
     author="Rachel Willmer",
     author_email="Rachel.Willmer@gov.scot",
-    scripts=['src/bin/clean_repo.py'],
+    scripts=['src/bin/repo_clean.py'],
     packages=['src/infra'],
     python_requires='~=3.5',
     classifiers=[

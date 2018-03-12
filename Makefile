@@ -82,10 +82,10 @@ test: ## run tests quickly with the default Python
 # 	twine upload dist/*
 
 run:
-	pipenv run src/bin/clean_repo.py
+	pipenv run src/bin/repo_clean.py
 
 dryrun:
-	pipenv run src/bin/clean_repo.py --dryrun
+	pipenv run src/bin/repo_clean.py --dryrun
 
 dist: clean ## builds source and wheel package
 	python setup.py sdist
