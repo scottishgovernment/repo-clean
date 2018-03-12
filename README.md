@@ -20,7 +20,7 @@ NEXUS_PASSWORD='****'
 
 ### run
 
-Either (a) enter into the virtual env, and then run ...
+Either (a) enter into the virtual env, and then run it ...
 
 $ pipenv shell
 $ ./bin/purge_nexus.py
@@ -42,7 +42,15 @@ $ PIPENV_DOTENV_LOCATION=`pwd`/env.test pipenv run pytest
 
 or
 
-$ ./test.sh
+$ cd tests; ./test.sh
+
+or
+
+$ make test
+
+### build
+
+$ make dist
 
 
 ## Developers

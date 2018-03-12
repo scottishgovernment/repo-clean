@@ -14,11 +14,14 @@ pyyaml = "*"
 
 [dev-packages]
 
-pycodestyle = "*"
-"flake8" = "*"
-"flake8-docstrings" = "*"
-pytest = "*"
+bumpversion = "*"
+coverage = "*"
+flake8 = "*"
+flake8-docstrings = "*"
 ipykernel = "*"
+pycodestyle = "*"
+pytest = "*"
+pytest-runner = "*"
 
 [requires]
 

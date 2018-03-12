@@ -1,13 +1,23 @@
 from setuptools import setup
 
+requirements = []
+
+setup_requirements = [
+    'pytest-runner',
+]
+
+test_requirements = [
+    'pytest',
+]
+
 setup(
     name='pipeline',
     version='0.1',
     description="Utilities for managing the Scot Gov deployment pipeline",
     author="Rachel Willmer",
     author_email="Rachel.Willmer@gov.scot",
-    scripts=['bin/purge_nexus.py'],
-    packages=['infra'],
+    scripts=['src/bin/clean_repo.py'],
+    packages=['src/infra'],
     python_requires='~=3.5',
     classifiers=[
         "Programming Language :: Python :: 3.5",
