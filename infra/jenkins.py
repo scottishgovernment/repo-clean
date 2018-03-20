@@ -6,9 +6,9 @@ from .utils import python_date_from_javascript_timestamp
 
 
 class Jenkins():
-    def __init__(self, host, verbose=False):
+    def __init__(self, host):
         self.host = host
-        self.verbose = verbose
+        # self.verbose = verbose
 
     def build_date(self, job_name, version):
         jsn = self._get_build_json(job_name, version)

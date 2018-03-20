@@ -8,7 +8,7 @@ from infra.config import get_my_servers
 from infra.jenkins import Jenkins
 from infra.nexus import Nexus
 from infra.product import Product
-from infra import EARLIEST_RELEASE_DATE
+from infra.config import EARLIEST_RELEASE_DATE
 
 get_my_servers()
 

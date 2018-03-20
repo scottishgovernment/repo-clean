@@ -11,3 +11,6 @@ debian/*/*
 __pycache__
 .pytest_cache
 build-py
+*.egg-info
+.cache
+.pybuild

@@ -1,4 +1,4 @@
-from . import EARLIEST_RELEASE_DATE
+from .config import EARLIEST_RELEASE_DATE
 from .config import my_servers
 from .product_release import ProductRelease
 from .jenkins import Jenkins
@@ -6,17 +6,13 @@ from .nexus import Nexus
 
 
 class Product():
-    def __init__(self,
-                 name,
-                 earliest_release_date=EARLIEST_RELEASE_DATE,
-                 verbose=False):
+    def __init__(self, name, earliest_release_date=EARLIEST_RELEASE_DATE):
         self.name = name
         self.earliest_release_date = earliest_release_date
         self._recent_releases = None
         self._stale_releases = None
-        self.jenkins = Jenkins(my_servers['JENKINS'], verbose=verbose)
-        self.nexus = Nexus(my_servers['NEXUS'], verbose=verbose)
-        self.verbose = verbose
+        self.jenkins = Jenkins(my_servers['JENKINS'])
+        self.nexus = Nexus(my_servers['NEXUS'])
 
     def __str__(self):
         return self.name
@@ -80,9 +76,9 @@ class Product():
             ProductRelease(product=self,
                            release=earliest).describe("Earliest Release"))
 
-        if self.verbose:
-            print("recent : %s" % self._recent_releases)
-            print("stale  : %s" % self._stale_releases)
+        # if self.args.verbose:
+        #     print("recent : %s" % self._recent_releases)
+        #     print("stale  : %s" % self._stale_releases)
 
     def recent_releases(self):
         if self._recent_releases is None:

@@ -26,8 +26,20 @@ export PRINT_HELP_PYSCRIPT
 
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 
+PYRUN := pipenv run
+
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+
+run: ## run repo_clean
+	$(PYRUN) python cli.py
+
+dry-run: ## do a dry-run of repo_clean
+		$(PYRUN) python cli.py --dry-run
+
+test: ## run the tests
+	cd tests; ./test.sh
+
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
 
@@ -48,29 +60,22 @@ clean-pyc: ## remove Python file artifacts
 	find . -name '__pycache__' -exec rm -fr {} +
 
 clean-test: ## remove test and coverage artifacts
-	# rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
 
 lint: ## check style with flake8
-	flake8 repo_clean tests
+	$(PYRUN) flake8 infra tests
 
-test: ## run tests quickly with the default Python
-	cd tests; ./test.sh
-
-# test-all: ## run tests on every Python version with tox
-# 	tox
-
-# coverage: ## check code coverage quickly with the default Python
-# 	coverage run --source repo_clean -m pytest
-# 	coverage report -m
-# 	coverage html
-# 	$(BROWSER) htmlcov/index.html
+coverage: ## check code coverage quickly with the default Python
+	$(PYRUN) coverage run --source infra -m pytest
+	$(PYRUN) coverage report -m
+	$(PYRUN) coverage html
+	$(BROWSER) htmlcov/index.html
 
 # docs: ## generate Sphinx HTML documentation, including API docs
-# 	rm -f docs/repo_clean.rst
+# 	rm -f docs/infra.rst
 # 	rm -f docs/modules.rst
-# 	sphinx-apidoc -o docs/ repo_clean
+# 	$(PYRUN) sphinx-apidoc -o docs/ infra
 # 	$(MAKE) -C docs clean
 # 	$(MAKE) -C docs html
 # 	$(BROWSER) docs/_build/html/index.html
@@ -81,16 +86,12 @@ test: ## run tests quickly with the default Python
 # release: clean ## package and upload a release
 # 	twine upload dist/*
 
-run:
-	pipenv run src/bin/repo_clean.py
-
-dryrun:
-	pipenv run src/bin/repo_clean.py --dryrun
-
 dist: clean ## builds source and wheel package
-	python setup.py sdist
-	python setup.py bdist_wheel
+	$(PYRUN) python setup.py sdist
+	$(PYRUN) python setup.py bdist_wheel
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
-	python setup.py install
+	$(PYRUN) python setup.py install
+
+# eof

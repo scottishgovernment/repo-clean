@@ -1,31 +1,43 @@
-from setuptools import setup
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""The setup script."""
+
+from setuptools import setup, find_packages
+
+with open('README.rst') as readme_file:
+    readme = readme_file.read()
 
 requirements = []
 
-setup_requirements = [
-    'pytest-runner',
-]
+setup_requirements = []
 
 test_requirements = [
     'pytest',
+    'pytest-runner',
 ]
 
 setup(
-    name='pipeline',
-    version='0.1',
-    description="Utilities for managing the Scot Gov deployment pipeline",
     author="Rachel Willmer",
-    author_email="Rachel.Willmer@gov.scot",
-    scripts=['src/bin/repo_clean.py'],
-    packages=['src/infra'],
-    python_requires='~=3.5',
+    author_email='rachel.willmer@gov.scot',
     classifiers=[
         "Programming Language :: Python :: 3.5",
     ],
-    url='http://stash.digital.gov.uk/projects/MGV/repos/deploy-pipeline/',
+    description="Tool to delete old build artefacts from Nexus repo",
+    entry_points={
+        'console_scripts': ['repo_clean=repo_clean.cli:main'],
+    },
+    include_package_data=True,
     install_requires=[
         'lxml',
-        'pyyaml',
+        'click',
         'requests',
-        'setuptools',
-    ])
+        'pyyaml',
+    ],
+    name='repo_clean',
+    packages=find_packages(include=['repo_clean']),
+    setup_requires=setup_requirements,
+    test_suite='tests',
+    tests_require=test_requirements,
+    url='http://stash.digital.gov.uk/projects/MGV/repos/deploy-pipeline/',
+    version='0.1.0',
+)

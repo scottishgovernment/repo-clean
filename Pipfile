@@ -7,6 +7,7 @@ name = "pypi"
 
 [packages]
 
+click = ">=6.0"
 lxml = "*"
 requests = "*"
 pyyaml = "*"
@@ -14,7 +15,6 @@ pyyaml = "*"
 
 [dev-packages]
 
-bumpversion = "*"
 coverage = "*"
 flake8 = "*"
 flake8-docstrings = "*"
@@ -22,7 +22,11 @@ ipykernel = "*"
 pycodestyle = "*"
 pytest = "*"
 pytest-runner = "*"
+sphinx = "*"
+watchdog = "*"
 
 [requires]
 
 python_version = "3.5"
+
+# eof

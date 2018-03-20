@@ -8,10 +8,9 @@ from yaml import load
 
 
 class Nexus():
-    def __init__(self, host, verbose=False):
+    def __init__(self, host):
         self.host = host
         self.auth = (environ['NEXUS_USER'], environ['NEXUS_PASSWORD'])
-        self.verbose = verbose
 
     def _full_url(self, path):
         return 'http://' + self.host + path
@@ -43,8 +42,8 @@ class Nexus():
                                  "/$product/$version/$product-$version.yaml")
         path = path_template.substitute(params)
         url = self._full_url(path)
-        if self.verbose:
-            print("url: %s" % url)
+        # if self.args.verbose:
+        #     print("url: %s" % url)
         r = requests.get(url)
         if r.status_code != 200:
             raise RuntimeError("Nexus %s: returns %s : %s\n%s" %
@@ -79,9 +78,9 @@ class Nexus():
         return self._get_items(path=path, auth=self.auth)
 
     def search(self, groupId, artefactId=None, version=None):
-        if self.verbose:
-            print("nexus search: group %s artefact %s version %s" %
-                  (groupId, artefactId, version))
+        # if self.args.verbose:
+        #     print("nexus search: group %s artefact %s version %s" %
+        #           (groupId, artefactId, version))
         params = {
             "repository": 'releases',
             "group": groupId,
