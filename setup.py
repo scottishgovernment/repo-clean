@@ -4,7 +4,7 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
+with open('README.md') as readme_file:
     readme = readme_file.read()
 
 requirements = []
@@ -24,7 +24,7 @@ setup(
     ],
     description="Tool to delete old build artefacts from Nexus repo",
     entry_points={
-        'console_scripts': ['repo_clean=repo_clean.cli:main'],
+        'console_scripts': ['repo-clean=repo_clean.cli:main'],
     },
     include_package_data=True,
     install_requires=[
@@ -34,7 +34,11 @@ setup(
         'pyyaml',
     ],
     name='repo_clean',
-    packages=find_packages(include=['repo_clean']),
+    packages=['infra', 'repo_clean'],
+    package_dir={
+        'repo_clean': '.',
+        'infra': 'infra'
+    },
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,

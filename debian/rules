@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+# See debhelper(7) (uncomment to enable)
+# output every command that modifies files on the build system.
+#export DH_VERBOSE = 1
+
+PKG=repo-clean
+export PYBUILD_NAME=repo-clean
+
+%:
+	dh $@  --with python3 --buildsystem=pybuild
+override_dh_auto_test:
+override_dh_builddeb:
+	dpkg-deb -b debian/$(PKG) $(OUTDIR)

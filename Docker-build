@@ -1,0 +1,14 @@
+FROM ubuntu:16.04
+MAINTAINER Martin Ellis <martin.ellis@gov.scot>
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y \
+    devscripts \
+    equivs
+COPY debian/control /mnt/debian/control
+RUN cd /mnt && \
+  mk-build-deps -i -r --tool 'apt-get --no-install-recommends -y -q'
+CMD rm -rf /src && \
+  cp -a /mnt/ /src && \
+  cd /src && \
+  OUTDIR=.. dpkg-buildpackage -b -us -uc 2>&1 | tee /mnt/build.log && \
+  cp ../repo-clean_*.deb /mnt

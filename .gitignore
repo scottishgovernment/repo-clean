@@ -2,11 +2,14 @@ target
 *.iml
 *.pyc
 *.deb
+debian/repo-clean/
 debian/changelog
 debian/files
-debian/*.debhelper.log
 debian/*.substvars
-debian/*/*
+debian/*.debhelper
+debian/*.debhelper.log
+debian/debhelper-build-stamp
+build.log
 .env
 __pycache__
 .pytest_cache
