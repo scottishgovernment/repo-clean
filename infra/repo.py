@@ -1,3 +1,4 @@
+from pdb import set_trace
 import collections
 from copy import deepcopy
 
@@ -36,6 +37,7 @@ class Repo():
         # b) by stale product releases
         # Note: there may be overlap between these two lists.
         artefacts = _get_artefacts(product_releases)
+        assert artefacts.recent
 
         print("*** #3: Create initial purge list.")
         initial_purge = self._create_initial_purge_list(artefacts)
@@ -45,7 +47,9 @@ class Repo():
             return
 
         print("*** #4: Add wildcards to purge list.")
-        final_purge = self._add_wildcards_to_purge_list(initial_purge)
+        final_purge = self._add_wildcards_to_purge_list(
+            initial_purge, artefacts.recent)
+        _verify_purge_list(final_purge, artefacts.recent)
 
         print("\nFINAL PURGE LIST:")
         final_purge.prettyprint()
@@ -89,8 +93,6 @@ class Repo():
         for tree in [artefacts.recent, artefacts.stale]:
             for groupId in tree._tree:
                 for artefactId in tree._tree[groupId]:
-                    # if not args.verbose:
-                    #     print('.', end='.', flush=True)
                     key = (groupId, artefactId)
                     if key in done:
                         continue
@@ -122,14 +124,10 @@ class Repo():
             return must_keep
 
         def _add_to_purge_from_group(known, purge, groupId):
-            # if args.verbose:
-            #     print("known: %s" % groupId)
             for artefactId in known.artefacts(groupId):
                 _add_to_purge_from_artefact(known, purge, groupId, artefactId)
 
         def _add_to_purge_from_artefact(known, purge, groupId, artefactId):
-            # if args.verbose:
-            #     print("known:art:%s" % artefactId)
 
             if _must_keep_artefact(groupId, artefactId):
                 return
@@ -138,26 +136,20 @@ class Repo():
                 if _must_keep_version(groupId, artefactId, version):
                     continue
 
-                purge.add(GAV(groupId, artefactId, version), verbose=False)
+                purge.add(GAV(groupId, artefactId, version))
 
         known = self._known_artefacts(artefacts)
-
-        # print("\n\tcreated list of known artefacts")
-        # if self.verbose:
-        #     known.prettyprint()
-        #     print()
-        #     print("*** The above is ALL artefacts referenced by ALL releases.")
-        #     # ***   ('All releases' = both current and stale)
-        #     # input("continue ?")
 
         purge = GAVtree('purge')
         for groupId in known.groups():
             _add_to_purge_from_group(known, purge, groupId)
 
         # print("\tcreated initial purge list")
+        print("initial: purge.has_version %s %s %s" %
+              ('scot.mygov.housing', 'housing-data', '1.0.40'))
         return purge
 
-    def _add_wildcards_to_purge_list(self, purge):
+    def _add_wildcards_to_purge_list(self, purge, recent):
         """
         From this list of artefacts, look for any which should be treated
         as wildcards, and add the related artefacts to purge list.
@@ -180,14 +172,13 @@ class Repo():
                     artefactId must match '*authentication*'
                 """
                 for version in purge.versions(groupId, artifactId):
-                    # if args.verbose:
-                    #     print("get wildcards: %s:%s:%s" % (groupId, artifactId,
-                    #                                        version))
-                    for art in self.nexus.related_artefactIds(
+                    for artId in self.nexus.related_artefactIds(
                             groupId, version):
-                        if _should_add_wildcard_artefact(groupId, art):
-                            purge2.add(
-                                GAV(groupId, art, version), verbose=False)
+
+                        if _should_add_wildcard_artefact(
+                                groupId, artId, version, self.nexus):
+
+                            purge2.add(GAV(groupId, artId, version))
         return purge2
 
 
@@ -219,8 +210,6 @@ def _must_keep_artefact(groupId, artefactId):
     # Keep anything mentioned as a snapshot in jenkins:resources/mygov.yaml
     for snapshot in snapshots:
         if groupId == snapshot.group and artefactId == snapshot.artefact:
-            # if args.verbose:
-            #     print("keeping all snapshot %s:%s" % (groupId, artefactId))
             return True
     return False
 
@@ -248,15 +237,22 @@ def _has_related_artifacts(groupId, artifactId):
     return True
 
 
-def _should_add_wildcard_artefact(groupId, artifactId):
+def _should_add_wildcard_artefact(groupId,
+                                  artifactId,
+                                  version=None,
+                                  nexus=None):
     """
     >>> _should_add_wildcard_artefact('org.mygovscot.publishing', 'publishing-deb')
+    no version for wildcard: org.mygovscot.publishing publishing-deb
     True
     >>> _should_add_wildcard_artefact('org.mygovscot.publishing', 'publishing-service')
+    no version for wildcard: org.mygovscot.publishing publishing-service
     True
     >>> _should_add_wildcard_artefact('org.mygovscot.beta', 'authentication-deb')
+    no version for wildcard: org.mygovscot.beta authentication-deb
     True
     >>> _should_add_wildcard_artefact('org.mygovscot.beta', 'authentication-service')
+    no version for wildcard: org.mygovscot.beta authentication-service
     True
     >>> _should_add_wildcard_artefact('org.mygovscot.beta', 'web-site')
     False
@@ -270,7 +266,20 @@ def _should_add_wildcard_artefact(groupId, artifactId):
     if _must_keep_artefact(groupId, artifactId):
         return False
 
+    if version:
+        gav = GAV(groupId, artifactId, version)
+        if not gav.has_parent(nexus=nexus):
+            print("Not adding wildcard for artefact with no parent: %s" % gav)
+            return False
+    else:
+        print("no version for wildcard: %s %s" % (groupId, artifactId))
+
     return True
+
+
+def _verify_purge_list(purge_list, recent):
+    for gav in purge_list.gavs():
+        assert (recent.has_version(gav) is False)
 
 
 #

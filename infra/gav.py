@@ -1,5 +1,4 @@
 class GAV():
-
     def __init__(self, groupId, artefactId, version):
         self.groupId = groupId
         self.artefactId = artefactId
@@ -27,6 +26,11 @@ class GAV():
     @property
     def abbrevs(self):
         return (self.g, self.a, self.v)
+
+    def has_parent(self, nexus):
+        xml = nexus.artefact_pom(self)
+        parent = xml.find('{http://maven.apache.org/POM/4.0.0}parent')
+        return (parent is not None)
 
 
 # eof

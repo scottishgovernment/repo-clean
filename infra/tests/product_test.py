@@ -9,6 +9,7 @@ from infra.jenkins import Jenkins
 from infra.nexus import Nexus
 from infra.product import Product
 from infra.config import EARLIEST_RELEASE_DATE
+from infra.gav import GAV
 
 get_my_servers()
 
@@ -78,6 +79,41 @@ class MockNexus_with_gaps(Mock):
         return tree
 
 
+class MockNexus(Mock):
+    def artefact_pom(self, gav):
+        if gav.g == "scot.mygov.housing" and gav.a == "housing":
+            xml = """<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<parent>
+<groupId>scot.mygov</groupId>
+<artifactId>mygov-parent</artifactId>
+<version>4</version>
+</parent>
+<groupId>scot.mygov.housing</groupId>
+<artifactId>housing</artifactId>
+<version>1.0.99</version>
+<packaging>pom</packaging>
+<name>Housing</name>
+<scm>
+<connection>
+scm:git:ssh://git@stash.digital.gov.uk:7999/mgv/housing.git
+</connection>
+<url>
+http://stash.digital.gov.uk/projects/MGV/repos/housing/
+</url>
+</scm>
+<modules>
+<module>housing-service</module>
+<module>housing-deb</module>
+</modules>
+</project>"""
+        else:
+            raise RuntimeError("test:artefact.pom needs data for %s" % gav)
+        tree = etree.parse(BytesIO(xml.encode('utf8')))
+        return tree
+
+
 class TestProduct(object):
     """Test the Product class."""
 
@@ -108,6 +144,11 @@ class TestProduct(object):
         assert (product._stale_releases == [
             VERSION_MINUS_2,
         ])
+
+    def test_gav_has_parent(self):
+        gav = GAV("scot.mygov.housing", "housing", "1.0.99")
+        nexus = MockNexus(spec=Nexus)
+        assert gav.has_parent(nexus)
 
 
 if __name__ == '__main__':

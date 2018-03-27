@@ -15,6 +15,32 @@ class Nexus():
     def _full_url(self, path):
         return 'http://' + self.host + path
 
+    def artefact_pom(self, gav):
+        """Return the xml for a specific artefact."""
+        group_path = gav.g.replace('.', '/')
+        params = {
+            'group': group_path,
+            'product': gav.a,
+            'version': gav.v,
+        }
+        path_template = Template("/repository/releases/$group" +
+                                 "/$product/$version/$product-$version.pom")
+        path = path_template.substitute(params)
+        url = self._full_url(path)
+        # print("artefact_pom: %s" % url)
+        r = requests.get(url)
+        if r.status_code != 200:
+            raise RuntimeError("Nexus %s: returns %s : %s\n%s" %
+                               (self.host, r.status_code, r.reason, url))
+        xml = r.text
+        tree = etree.parse(BytesIO(xml.encode('utf8')))
+        schemaLocation = tree.getroot().attrib[
+            '{http://www.w3.org/2001/XMLSchema-instance}schemaLocation']
+        assert schemaLocation.startswith(
+            "http://maven.apache.org/POM/4.0.0"
+        ), "schemaLocation = '%s'" % schemaLocation
+        return tree
+
     def product_maven_metadata(self, component_name):
         release = "scot/mygov/release"
         params = {"release": release, "component_name": component_name}
@@ -42,8 +68,6 @@ class Nexus():
                                  "/$product/$version/$product-$version.yaml")
         path = path_template.substitute(params)
         url = self._full_url(path)
-        # if self.args.verbose:
-        #     print("url: %s" % url)
         r = requests.get(url)
         if r.status_code != 200:
             raise RuntimeError("Nexus %s: returns %s : %s\n%s" %
@@ -78,9 +102,6 @@ class Nexus():
         return self._get_items(path=path, auth=self.auth)
 
     def search(self, groupId, artefactId=None, version=None):
-        # if self.args.verbose:
-        #     print("nexus search: group %s artefact %s version %s" %
-        #           (groupId, artefactId, version))
         params = {
             "repository": 'releases',
             "group": groupId,

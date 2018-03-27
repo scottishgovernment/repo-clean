@@ -19,7 +19,7 @@ class GAVtree():
                 print("\t%s: %s" % (art, self._tree[group][art]))
         print()
 
-    def add(self, gav, verbose=False):
+    def add(self, gav):
         assert isinstance(gav, GAV)
 
         # abbreviate for clarity
@@ -31,8 +31,6 @@ class GAVtree():
         if not self.has_artefact(g, a):
             self._add_artefact(g, a)
 
-        if verbose:
-            print("%s: add %s" % (self.name, gav))
         self._add_version(g, a, v)
 
     def contains(self, gav):
@@ -73,8 +71,13 @@ class GAVtree():
     def has_artefact(self, g, a):
         return self.has_group(g) and a in self._tree[g].keys()
 
-    def has_version(self, g, a, v):
-        return self.has_artefact(g, a) and v in self._tree[g].versions
+    # def has_version(self, g, a, v):
+    #     return self.has_artefact(g, a) and v in self._tree[g].versions
+
+    def has_version(self, gav):
+        return (
+            self.has_artefact(gav.g, gav.a)
+            and gav.v in self.versions(gav.g, gav.a))  # _tree[gav.g].versions)
 
     def gavs(self):
         for g in self.groups():
