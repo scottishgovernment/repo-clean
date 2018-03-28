@@ -27,57 +27,19 @@ for x in required:
     except KeyError:
         print("Error: set %s" % x)
         ok = False
+        os.environ[x] = ''
+
 if not ok:
     print("\n*** Need to set environment variables ***")
-    exit(-1)
 
+print("\nServers:")
 SERVERS = ['JENKINS', 'NEXUS']
 for x in SERVERS:
     try:
         my_servers[x] = os.environ[x]
+        print("%s : \t%s" % (x, my_servers[x]))
     except KeyError:
-        raise RuntimeError(
-            "You must set '%s' as an Env Var (hint: use .env)" % x)
-
-print("\nServers:")
-for x in SERVERS:
-    print("%s : \t%s" % (x, my_servers[x]))
-
-# def _setup():
-#     from nexus import Nexus
-#     from product import Product
-#
-#     nexus = Nexus(my_servers['NEXUS'])
-#
-#     # products = [
-#     #     Product('gov-site'),
-#     #     Product('mygov-site'),
-#     # ]
-#     #
-#     #
-#
-#
-# _setup()
-
-# def setup():
-#     from nexus import Nexus
-#     from product import Product
-#
-#     global nexus, products
-#     get_my_servers()
-#
-#     print("args: %s" % str(args))
-#
-#     nexus = Nexus(my_servers['NEXUS'])
-#
-#     products = [
-#         Product('gov-site'),
-#         Product('mygov-site'),
-#     ]
-#     # products = [
-#     #     Product('gov-site', verbose=args.verbose),
-#     #     Product('mygov-site', verbose=args.verbose),
-#     # ]
+        print("WARNING: You must set '%s' as an Env Var (hint: use .env)" % x)
 
 
 def get_my_servers():

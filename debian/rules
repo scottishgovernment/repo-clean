@@ -8,6 +8,6 @@ export PYBUILD_NAME=repo-clean
 
 %:
 	dh $@  --with python3 --buildsystem=pybuild
-override_dh_auto_test:
+#override_dh_auto_test:
 override_dh_builddeb:
 	dpkg-deb -b debian/$(PKG) $(OUTDIR)

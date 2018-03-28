@@ -7,15 +7,6 @@ from setuptools import setup, find_packages
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
-requirements = []
-
-setup_requirements = []
-
-test_requirements = [
-    'pytest',
-    'pytest-runner',
-]
-
 setup(
     author="Rachel Willmer",
     author_email='rachel.willmer@gov.scot',
@@ -28,10 +19,12 @@ setup(
     },
     include_package_data=True,
     install_requires=[
-        'lxml',
-        'click',
-        'requests',
-        'pyyaml',
+        # see Pipfile for requires. Not including them here because
+        # setup.py will download from PyPi.
+        # 'lxml',
+        # 'click',
+        # 'requests',
+        # 'pyyaml',
     ],
     name='repo_clean',
     packages=['infra', 'repo_clean'],
@@ -39,9 +32,13 @@ setup(
         'repo_clean': '.',
         'infra': 'infra'
     },
-    setup_requires=setup_requirements,
+    setup_requires=[
+        # 'pytest',
+        # not available until artful/bionic e.g. 1804 LTS
+        'pytest-runner',
+    ],
     test_suite='tests',
-    tests_require=test_requirements,
+    tests_require=['pytest'],
     url='http://stash.digital.gov.uk/projects/MGV/repos/deploy-pipeline/',
     version='0.1.0',
 )

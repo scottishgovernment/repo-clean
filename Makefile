@@ -32,13 +32,16 @@ help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 run: ## run repo_clean
+	pipenv install
 	$(PYRUN) python cli.py
 
 dry-run: ## do a dry-run of repo_clean
-		$(PYRUN) python cli.py --dry-run
+	pipenv install
+	$(PYRUN) python cli.py --dry-run
 
 test: ## run the tests
-	cd tests; ./test.sh
+	pipenv install --dev
+	PIPENV_DOTENV_LOCATION=`pwd`/env.test pipenv run pytest
 
 
 clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
