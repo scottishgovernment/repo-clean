@@ -35,6 +35,5 @@ setup(
     ],
     test_suite='tests',
     tests_require=['pytest'],
-    url='http://stash.digital.gov.uk/projects/MGV/repos/deploy-pipeline/',
-    version='0.1.0',
+    url='http://stash.digital.gov.uk/projects/MGV/repos/repo-clean/',
 )

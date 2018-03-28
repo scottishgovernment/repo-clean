@@ -3,7 +3,7 @@
 Repo Clean provides a tool to clean the Nexus repository of old artifacts which
 have not been used by a build in the last 3 months.
 
-## Building
+## Building on Jenkins
 
 A package can be built in one of two different ways:
 
@@ -28,7 +28,7 @@ The build script supports the following options:
 * `-v`: Specifies the version of the binary to build, e.g. `-v 1.0.0`.
 * `--ci`: Specifies that the package should be built in a Docker container.
 
-## Using pipenv
+## Developing on OSX
 
 Install pipenv
 
@@ -48,12 +48,12 @@ NEXUS to a local VM.
     NEXUS_USER='admin'
     NEXUS_PASSWORD='****'
 
-## Makefile
+### Makefile
 
 The Makefile contains these standard commands
 
     make run
-    make dryrun
+    make dry-run
     make test
     make dist
 
