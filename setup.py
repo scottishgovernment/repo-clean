@@ -19,12 +19,10 @@ setup(
     },
     include_package_data=True,
     install_requires=[
-        # see Pipfile for requires. Not including them here because
-        # setup.py will download from PyPi.
-        # 'lxml',
-        # 'click',
-        # 'requests',
-        # 'pyyaml',
+        'lxml',
+        'click',
+        'requests',
+        'pyyaml',
     ],
     name='repo_clean',
     packages=['infra', 'repo_clean'],
@@ -33,8 +31,6 @@ setup(
         'infra': 'infra'
     },
     setup_requires=[
-        # 'pytest',
-        # not available until artful/bionic e.g. 1804 LTS
         'pytest-runner',
     ],
     test_suite='tests',
