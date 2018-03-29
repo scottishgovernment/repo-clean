@@ -2,9 +2,10 @@ from pdb import set_trace
 import collections
 from copy import deepcopy
 
-from .config import STALE_DATE, my_servers
+from . import STALE_DATE
 from .gav import GAV
 from .gav_tree import GAVtree
+from .jenkins import Jenkins
 from .nexus import Nexus
 from .product import Product
 from .utils import is_earlier_version
@@ -15,11 +16,13 @@ Artefacts = collections.namedtuple('Artefacts', ['recent', 'stale'])
 
 
 class Repo():
-    def __init__(self):
-        self.nexus = Nexus(my_servers['NEXUS'])
+    def __init__(self, jenkins_host, nexus_host, nexus_user, nexus_password,
+                 product_names):
+        self.jenkins = Jenkins(jenkins_host)
+        self.nexus = Nexus(nexus_host, nexus_user, nexus_password)
+        self.product_names = product_names
         self.products = [
-            Product('gov-site'),
-            Product('mygov-site'),
+            Product(x, self.jenkins, self.nexus) for x in self.product_names
         ]
         self.stale_date = STALE_DATE
 

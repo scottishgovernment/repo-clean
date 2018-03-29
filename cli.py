@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Console script for repo_clean."""
 import sys
+import os
+import configparser
 import click
 from pdb import set_trace
 
@@ -9,6 +11,11 @@ from infra.repo import Repo
 args = None
 
 
+@click.option(
+    '--config-file',
+    type=click.Path(),
+    default="~/repo-clean.ini",
+)
 @click.option(
     '--dry-run',
     default=False,
@@ -22,13 +29,23 @@ args = None
     is_flag=True,
 )
 @click.command()
-def main(dry_run, debug):
+def main(config_file, dry_run, debug):
     """Console script for repo_clean."""
-    print("args: dry_run: %s, debug: %s" % (dry_run, debug))
+    print("args: config_file: %s, dry_run: %s, debug: %s\n" % (config_file,
+                                                               dry_run, debug))
     if debug:
         set_trace()
 
-    repo = Repo()
+    filename = os.path.expanduser(config_file)
+    config = configparser.ConfigParser()
+    config.read(filename)
+    params = {}
+    for x in ['jenkins_host', 'nexus_host', 'nexus_user', 'nexus_password']:
+        params[x] = config['DEFAULT'][x]
+    for x in ['product_names']:
+        val = config['DEFAULT'][x]
+        params[x] = [thing.strip() for thing in val.split(',')]
+    repo = Repo(**params)
     if not repo.nexus.host:
         print("Invalid config")
         exit(-1)

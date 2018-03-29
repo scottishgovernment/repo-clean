@@ -1,32 +1,24 @@
-from .config import EARLIEST_RELEASE_DATE
-from .config import my_servers
+from . import EARLIEST_RELEASE_DATE
 from .product_release import ProductRelease
 from .jenkins import Jenkins
 from .nexus import Nexus
 
 
 class Product():
-    def __init__(self, name, earliest_release_date=EARLIEST_RELEASE_DATE):
+    def __init__(self,
+                 name,
+                 jenkins,
+                 nexus,
+                 earliest_release_date=EARLIEST_RELEASE_DATE):
         self.name = name
+        self.jenkins = jenkins
+        self.nexus = nexus
         self.earliest_release_date = earliest_release_date
         self._recent_releases = None
         self._stale_releases = None
-        self.jenkins = Jenkins(my_servers['JENKINS'])
-        self.nexus = Nexus(my_servers['NEXUS'])
 
     def __str__(self):
         return self.name
-
-    # @property
-    # def _jobs(self):
-    #     return {
-    #         'gov-site': "gov-release-prepare",
-    #         'mygov-site': 'mygov-release-prepare',
-    #     }
-    #
-    # @property
-    # def _job_name(self):
-    #     return self._jobs[self.name]
 
     def _is_recent_release(self, version):
         pr = ProductRelease(product=self, release=version)

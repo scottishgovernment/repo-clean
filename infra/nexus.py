@@ -8,9 +8,11 @@ from yaml import load
 
 
 class Nexus():
-    def __init__(self, host):
+    def __init__(self, host, user, password):
         self.host = host
-        self.auth = (environ['NEXUS_USER'], environ['NEXUS_PASSWORD'])
+        self.user = user
+        self.password = password
+        self.auth = (self.user, self.password)
 
     def _full_url(self, path):
         return 'http://' + self.host + path
@@ -27,7 +29,6 @@ class Nexus():
                                  "/$product/$version/$product-$version.pom")
         path = path_template.substitute(params)
         url = self._full_url(path)
-        # print("artefact_pom: %s" % url)
         r = requests.get(url)
         if r.status_code != 200:
             raise RuntimeError("Nexus %s: returns %s : %s\n%s" %
