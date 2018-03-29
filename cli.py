@@ -37,6 +37,11 @@ def main(config_file, dry_run, debug):
         set_trace()
 
     filename = os.path.expanduser(config_file)
+
+    if not os.path.exists(filename):
+        print("Config file %s does not exist" % filename)
+        exit(-1)
+
     config = configparser.ConfigParser()
     config.read(filename)
     params = {}
