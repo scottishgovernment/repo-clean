@@ -138,7 +138,7 @@ class Nexus():
 
     def _delete(self, thing_type, thing_id):
         assert thing_type in ['assets', 'components']
-        path = "/service/rest/beta/%s/%s" % (thing_type, thing_id)
+        path = "/service/rest/v1/%s/%s" % (thing_type, thing_id)
         url = self._full_url(path)
         print(url)
 
@@ -158,7 +158,7 @@ class Nexus():
             if task['type'] == 'blobstore.compact':
                 compact_task_id = task['id']
         assert compact_task_id is not None
-        path = '/service/rest/beta/tasks/%s/run' % compact_task_id
+        path = '/service/rest/v1/tasks/%s/run' % compact_task_id
         url = self._full_url(path)
         r = requests.post(url, auth=self.auth)
         assert r.status_code == 204
