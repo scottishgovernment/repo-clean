@@ -99,7 +99,7 @@ class Nexus():
             params['continuationToken'] = cont
 
     def list_tasks(self):
-        path = "/service/rest/beta/tasks"
+        path = "/service/rest/v1/tasks"
         return self._get_items(path=path, auth=self.auth)
 
     def search(self, groupId, artefactId=None, version=None):
@@ -109,7 +109,7 @@ class Nexus():
             'name': artefactId,
             'version': version,
         }
-        path = "/service/rest/beta/search"
+        path = "/service/rest/v1/search"
         results = self._get_items(path=path, params=params)
         return results
 
