@@ -147,9 +147,6 @@ class Repo():
         for groupId in known.groups():
             _add_to_purge_from_group(known, purge, groupId)
 
-        # print("\tcreated initial purge list")
-        print("initial: purge.has_version %s %s %s" %
-              ('scot.mygov.housing', 'housing-data', '1.0.40'))
         return purge
 
     def _add_wildcards_to_purge_list(self, purge, recent):
