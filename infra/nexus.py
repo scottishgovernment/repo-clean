@@ -4,7 +4,7 @@ from io import BytesIO
 
 import requests
 from lxml import etree
-from yaml import load
+from yaml import safe_load
 
 
 class Nexus():
@@ -74,7 +74,7 @@ class Nexus():
             raise RuntimeError("Nexus %s: returns %s : %s\n%s" %
                                (self.host, r.status_code, r.reason, url))
         txt = r.text
-        jsn = load(txt)
+        jsn = safe_load(txt)
         return jsn
 
     def _get_items(self, path, auth=None, params={}):
