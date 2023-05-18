@@ -96,7 +96,7 @@ def _get_sorted_versions(tree):
     except Exception:
         raise RuntimeError("Handle non-int versions: %s" % versions)
     sorted_versions = sorted(int_versions)
-    return sorted_versions
+    return sorted_versions[-25:]
 
 
 # eof
