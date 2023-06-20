@@ -15,6 +15,6 @@ Standards-Version: 3.9.6
 X-Python3-Version: >= 3.2
 
 Package: repo-clean
-Architecture: any
+Architecture: all
 Depends: ${python3:Depends}, ${misc:Depends}
 Description: Clean old build artifacts
