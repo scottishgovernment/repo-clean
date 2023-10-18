@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:22.04
 MAINTAINER Martin Ellis <martin.ellis@gov.scot>
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y \

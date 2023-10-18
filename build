@@ -13,7 +13,7 @@ while test $# -gt 0; do
 done
 
 rm -f debian/changelog
-dch --create --package repo-clean -v $VERSION ""
+dch --create --controlmaint --package repo-clean -v $VERSION ""
 if [ -z "$ci" ]; then
   ./debian/rules clean
   ./debian/rules build
